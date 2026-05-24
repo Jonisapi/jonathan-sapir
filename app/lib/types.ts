@@ -15,9 +15,16 @@ export interface Prediction {
   submittedAt: string;
 }
 
+export interface PrizeSettings {
+  teamWinner: string;
+  tickets: string;
+  goals: string;
+}
+
 export interface AdminState {
   locked: boolean;
   actualGoals: number;
   actualCards: number;
   teams: Team[];
+  prizes: PrizeSettings;
 }

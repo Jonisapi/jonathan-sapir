@@ -6,9 +6,9 @@ const config: Config = {
     extend: {
       colors: {
         brand: {
-          navy: '#112A46',
-          teal: '#00A6A6',
-          gold: '#F3C969'
+          navy: '#2A1710',
+          teal: '#1F7A4D',
+          gold: '#B91C1C'
         }
       }
     }

@@ -32,6 +32,9 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     if (predictions.some((x) => x.email.toLowerCase() === p.email.toLowerCase())) {
       return { ok: false, message: 'Only one entry per work email is allowed.' };
     }
+    if (predictions.some((x) => x.winner === p.winner)) {
+      return { ok: false, message: `${p.winner} has already been chosen. Please pick another team.` };
+    }
     const next = [...predictions, { ...p, id: crypto.randomUUID(), submittedAt: new Date().toISOString() }];
     setPredictions(next);
     savePredictions(next);

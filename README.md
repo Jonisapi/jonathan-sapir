@@ -1,11 +1,14 @@
-<div align="center">
+# WNB World Cup Office Draw (Pilot)
 
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+Next.js + TypeScript + Tailwind pilot for an internal office prediction game.
 
-  <h1>Built with AI Studio</h2>
+## Run locally
 
-  <p>The fastest path from prompt to production with Gemini.</p>
+```bash
+npm install
+npm run dev
+```
 
-  <a href="https://aistudio.google.com/apps">Start building</a>
-
-</div>
+## Notes
+- Uses localStorage as a mock persistence layer (Supabase-ready architecture via `app/lib/store.ts`).
+- Not a betting app. Internal free office game with company-funded prizes.

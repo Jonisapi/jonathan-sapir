@@ -5,7 +5,7 @@ import { useAppState } from '../components/AppState';
 const ADMIN_PASSCODE = '8888';
 
 export default function AdminPage() {
-  const { predictions, admin, setAdmin, updatePrediction, deletePrediction } = useAppState();
+  const { predictions, admin, loading, error: stateError, setAdmin, updatePrediction, deletePrediction } = useAppState();
   const [passcode, setPasscode] = useState('');
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [error, setError] = useState('');
@@ -55,6 +55,18 @@ export default function AdminPage() {
 
   return (
     <main className="space-y-5">
+      {loading && (
+        <section className="card">
+          <p className="text-sm font-semibold text-slate-800">Loading shared data...</p>
+        </section>
+      )}
+      {stateError && (
+        <section className="rounded-lg border border-red-200 bg-red-50 p-4">
+          <h2 className="font-semibold text-red-900">Shared data is not loading</h2>
+          <p className="mt-1 text-sm font-medium text-red-800">{stateError}</p>
+          <p className="mt-2 text-sm text-red-800">Check Netlify environment variables and Supabase table setup.</p>
+        </section>
+      )}
       <section className="football-lines card bg-brand-navy text-white">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>

@@ -10,6 +10,7 @@ type Ctx = {
   predictions: Prediction[];
   admin: AdminState;
   loading: boolean;
+  error: string;
   addPrediction: (p: PredictionInput) => Promise<{ ok: boolean; message: string }>;
   updatePrediction: (id: string, changes: PredictionChanges) => Promise<void>;
   deletePrediction: (id: string) => Promise<void>;
@@ -40,20 +41,53 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
   const [admin, setAdminState] = useState<AdminState | null>(null);
   const [loading, setLoading] = useState(true);
   const [useLocalFallback, setUseLocalFallback] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    apiRequest<{ predictions: Prediction[]; admin: AdminState }>('/api/state')
-      .then((state) => {
-        setPredictions(state.predictions);
-        setAdminState(state.admin);
-      })
-      .catch(() => {
-        setUseLocalFallback(true);
-        setPredictions(loadPredictions());
-        setAdminState(loadAdminState());
-      })
-      .finally(() => setLoading(false));
-  }, []);
+    const canUseLocalFallback = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+    const loadState = () => {
+      apiRequest<{ predictions: Prediction[]; admin: AdminState }>('/api/state')
+        .then((state) => {
+          setUseLocalFallback(false);
+          setError('');
+          setPredictions(state.predictions);
+          setAdminState(state.admin);
+        })
+        .catch((loadError) => {
+          if (canUseLocalFallback) {
+            setUseLocalFallback(true);
+            setError('');
+            setPredictions(loadPredictions());
+            setAdminState(loadAdminState());
+            return;
+          }
+          setError(loadError instanceof Error ? loadError.message : 'Unable to load shared data.');
+          setPredictions([]);
+          setAdminState(loadAdminState());
+        })
+        .finally(() => setLoading(false));
+    };
+
+    loadState();
+    const intervalId = window.setInterval(() => {
+      if (!useLocalFallback) loadState();
+    }, 5000);
+
+    return () => window.clearInterval(intervalId);
+  }, [useLocalFallback]);
+
+  const refreshState = async () => {
+    if (useLocalFallback) return;
+    try {
+      const state = await apiRequest<{ predictions: Prediction[]; admin: AdminState }>('/api/state');
+      setError('');
+      setPredictions(state.predictions);
+      setAdminState(state.admin);
+    } catch (refreshError) {
+      setError(refreshError instanceof Error ? refreshError.message : 'Unable to refresh shared data.');
+    }
+  };
 
   const setAdmin = async (nextAdmin: AdminState) => {
     setAdminState(nextAdmin);
@@ -96,7 +130,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
         method: 'POST',
         body: JSON.stringify(prediction)
       });
-      setPredictions((current) => [...current, data.prediction]);
+      await refreshState();
       return { ok: data.ok, message: data.message };
     } catch (error) {
       return { ok: false, message: error instanceof Error ? error.message : 'Unable to submit prediction.' };
@@ -115,6 +149,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
         method: 'PATCH',
         body: JSON.stringify(changes)
       });
+      await refreshState();
     } catch (error) {
       if (error instanceof Error && error.message === 'Unauthorized.') return;
       setUseLocalFallback(true);
@@ -131,6 +166,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     }
     try {
       await apiRequest<{ ok: boolean }>(`/api/predictions/${id}`, { method: 'DELETE' });
+      await refreshState();
     } catch (error) {
       if (error instanceof Error && error.message === 'Unauthorized.') return;
       setUseLocalFallback(true);
@@ -142,11 +178,12 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     predictions,
     admin: admin ?? loadAdminState(),
     loading,
+    error,
     addPrediction,
     updatePrediction,
     deletePrediction,
     setAdmin
-  }), [predictions, admin, loading, useLocalFallback]);
+  }), [predictions, admin, loading, error, useLocalFallback]);
 
   return <StateContext.Provider value={value}>{children}</StateContext.Provider>;
 }

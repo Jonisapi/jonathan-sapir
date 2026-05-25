@@ -30,7 +30,7 @@ export default function PredictPage() {
       <section className="football-lines card bg-brand-navy text-white">
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-gold">Your entry</p>
         <h1 className="mt-3 text-3xl font-bold">Make the call before kick-off.</h1>
-        <p className="mt-3 text-sm leading-6 text-slate-200">
+        <p className="mt-4 rounded-md bg-white/90 p-3 text-sm font-bold leading-6 text-slate-800 shadow-sm">
           One prediction is allowed per work email. Once admin locks entries, the form becomes read-only.
         </p>
         <div className="mt-6 grid gap-3 text-sm">

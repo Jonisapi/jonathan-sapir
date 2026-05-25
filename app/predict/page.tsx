@@ -6,10 +6,11 @@ export default function PredictPage() {
   const { addPrediction, admin, predictions } = useAppState();
   const [msg, setMsg] = useState('');
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = new FormData(e.currentTarget);
-    const result = addPrediction({
+    const formElement = e.currentTarget;
+    const result = await addPrediction({
       fullName: String(form.get('fullName')),
       email: String(form.get('email')),
       winner: String(form.get('winner')),
@@ -17,7 +18,7 @@ export default function PredictPage() {
       totalCards: Number(form.get('totalCards'))
     });
     setMsg(result.message);
-    if (result.ok) e.currentTarget.reset();
+    if (result.ok) formElement.reset();
   };
 
   const claimedTeams = new Set(predictions.map((prediction) => prediction.winner));

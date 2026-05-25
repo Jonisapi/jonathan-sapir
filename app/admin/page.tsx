@@ -18,6 +18,7 @@ export default function AdminPage() {
   const unlockAdmin = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (passcode === ADMIN_PASSCODE) {
+      sessionStorage.setItem('wnb_admin_passcode', passcode);
       setIsAuthorized(true);
       setError('');
       return;

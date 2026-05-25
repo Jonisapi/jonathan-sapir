@@ -18,7 +18,7 @@ export default function HomePage() {
             <h1 className="mt-5 text-5xl font-black leading-[0.98] text-slate-900 sm:text-6xl">
               A sharper World Cup draw for the whole office.
             </h1>
-            <p className="mt-6 max-w-xl text-lg leading-8 text-slate-950">
+            <p className="mt-6 max-w-xl text-lg font-medium leading-8 text-slate-700">
               Submit one entry, follow the live office standings, and compete for company-funded prizes across winner, goals, and booking-card categories.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">

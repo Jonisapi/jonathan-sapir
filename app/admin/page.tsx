@@ -5,7 +5,7 @@ import { useAppState } from '../components/AppState';
 const ADMIN_PASSCODE = '8888';
 
 export default function AdminPage() {
-  const { predictions, admin, setAdmin } = useAppState();
+  const { predictions, admin, setAdmin, updatePrediction, deletePrediction } = useAppState();
   const [passcode, setPasscode] = useState('');
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [error, setError] = useState('');
@@ -134,7 +134,7 @@ export default function AdminPage() {
       <section className="card">
         <h2 className="mb-4 text-xl font-semibold">All Predictions</h2>
         <div className="overflow-auto rounded-lg border border-slate-200">
-          <table className="w-full min-w-[720px] text-sm">
+          <table className="w-full min-w-[920px] text-sm">
             <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
               <tr>
                 <th className="table-cell">Name</th>
@@ -142,21 +142,41 @@ export default function AdminPage() {
                 <th className="table-cell">Winner</th>
                 <th className="table-cell">Goals</th>
                 <th className="table-cell">Cards</th>
+                <th className="table-cell">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200">
               {predictions.map((p) => (
                 <tr key={p.id}>
-                  <td className="table-cell font-medium">{p.fullName}</td>
-                  <td className="table-cell text-slate-600">{p.email}</td>
-                  <td className="table-cell">{p.winner}</td>
-                  <td className="table-cell">{p.totalGoals}</td>
-                  <td className="table-cell">{p.totalCards}</td>
+                  <td className="table-cell">
+                    <input className="field min-w-36" value={p.fullName} onChange={(e) => updatePrediction(p.id, { fullName: e.target.value })} />
+                  </td>
+                  <td className="table-cell">
+                    <input className="field min-w-52" type="email" value={p.email} onChange={(e) => updatePrediction(p.id, { email: e.target.value })} />
+                  </td>
+                  <td className="table-cell">
+                    <select className="field min-w-40" value={p.winner} onChange={(e) => updatePrediction(p.id, { winner: e.target.value })}>
+                      {admin.teams
+                        .filter((team) => team.name === p.winner || (team.status === 'active' && !claimedTeams.has(team.name)))
+                        .map((team) => <option key={team.name}>{team.name}</option>)}
+                    </select>
+                  </td>
+                  <td className="table-cell">
+                    <input className="field min-w-24" type="number" min="0" value={p.totalGoals} onChange={(e) => updatePrediction(p.id, { totalGoals: Number(e.target.value) })} />
+                  </td>
+                  <td className="table-cell">
+                    <input className="field min-w-24" type="number" min="0" value={p.totalCards} onChange={(e) => updatePrediction(p.id, { totalCards: Number(e.target.value) })} />
+                  </td>
+                  <td className="table-cell">
+                    <button className="rounded-md bg-red-700 px-3 py-2 text-xs font-semibold text-white transition hover:bg-red-800" onClick={() => deletePrediction(p.id)}>
+                      Remove
+                    </button>
+                  </td>
                 </tr>
               ))}
               {!predictions.length && (
                 <tr>
-                  <td className="table-cell text-slate-500" colSpan={5}>No predictions have been submitted yet.</td>
+                  <td className="table-cell text-slate-500" colSpan={6}>No predictions have been submitted yet.</td>
                 </tr>
               )}
             </tbody>

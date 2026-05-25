@@ -7,6 +7,8 @@ type Ctx = {
   predictions: Prediction[];
   admin: AdminState;
   addPrediction: (p: Omit<Prediction, 'id' | 'submittedAt'>) => { ok: boolean; message: string };
+  updatePrediction: (id: string, changes: Partial<Omit<Prediction, 'id' | 'submittedAt'>>) => void;
+  deletePrediction: (id: string) => void;
   setAdmin: (a: AdminState) => void;
 };
 
@@ -41,7 +43,19 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     return { ok: true, message: 'Prediction submitted!' };
   };
 
-  const value = useMemo(() => ({ predictions, admin: admin ?? loadAdminState(), addPrediction, setAdmin }), [predictions, admin]);
+  const updatePrediction = (id: string, changes: Partial<Omit<Prediction, 'id' | 'submittedAt'>>) => {
+    const next = predictions.map((prediction) => prediction.id === id ? { ...prediction, ...changes } : prediction);
+    setPredictions(next);
+    savePredictions(next);
+  };
+
+  const deletePrediction = (id: string) => {
+    const next = predictions.filter((prediction) => prediction.id !== id);
+    setPredictions(next);
+    savePredictions(next);
+  };
+
+  const value = useMemo(() => ({ predictions, admin: admin ?? loadAdminState(), addPrediction, updatePrediction, deletePrediction, setAdmin }), [predictions, admin]);
 
   return <StateContext.Provider value={value}>{children}</StateContext.Provider>;
 }

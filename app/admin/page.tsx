@@ -12,6 +12,7 @@ export default function AdminPage() {
   const winnerGoals = [...predictions].sort((a, b) => Math.abs(a.totalGoals - admin.actualGoals) - Math.abs(b.totalGoals - admin.actualGoals) || a.submittedAt.localeCompare(b.submittedAt))[0];
   const winnerCards = [...predictions].sort((a, b) => Math.abs(a.totalCards - admin.actualCards) - Math.abs(b.totalCards - admin.actualCards) || a.submittedAt.localeCompare(b.submittedAt))[0];
   const claimedTeams = new Set(predictions.map((prediction) => prediction.winner));
+  const claimedByTeam = new Map(predictions.map((prediction) => [prediction.winner, prediction.fullName]));
   const availableCount = admin.teams.filter((team) => team.status === 'active' && !claimedTeams.has(team.name)).length;
 
   const unlockAdmin = (event: FormEvent<HTMLFormElement>) => {
@@ -101,11 +102,12 @@ export default function AdminPage() {
             {admin.teams.map((team) => (
               <button
                 key={team.name}
+                disabled={claimedTeams.has(team.name)}
                 className={`rounded-md border p-2 text-left text-sm transition ${claimedTeams.has(team.name) ? 'border-red-200 bg-red-50 text-red-800' : team.status === 'active' ? 'border-emerald-200 bg-emerald-50 text-emerald-800 hover:bg-emerald-100' : 'border-rose-200 bg-rose-50 text-rose-800 hover:bg-rose-100'}`}
                 onClick={() => setAdmin({ ...admin, teams: admin.teams.map((t) => t.name === team.name ? { ...t, status: t.status === 'active' ? 'eliminated' : 'active' } : t) })}
               >
                 <span className="block font-semibold">{team.name}</span>
-                <span className="text-xs capitalize">{claimedTeams.has(team.name) ? 'claimed' : team.status}</span>
+                <span className="text-xs capitalize">{claimedTeams.has(team.name) ? `claimed by ${claimedByTeam.get(team.name)}` : team.status}</span>
               </button>
             ))}
           </div>

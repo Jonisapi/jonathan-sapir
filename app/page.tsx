@@ -47,7 +47,7 @@ export default function HomePage() {
           <article key={card.title} className="surface">
             <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-md bg-brand-teal/10 text-sm font-black text-brand-teal">{card.stat}</div>
             <h2 className="text-lg font-semibold">{card.title}</h2>
-            <p className="mt-2 text-sm leading-6 text-slate-600">{card.text}</p>
+            <p className="mt-2 text-sm font-medium leading-6 text-slate-800">{card.text}</p>
           </article>
         ))}
       </section>

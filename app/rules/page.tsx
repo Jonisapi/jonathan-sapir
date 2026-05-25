@@ -24,7 +24,7 @@ export default function RulesPage() {
       <section className="football-lines card bg-brand-navy text-white">
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-gold">Rules & prizes</p>
         <h1 className="mt-2 text-3xl font-bold">Simple scoring, one team per person.</h1>
-        <p className="mt-3 max-w-2xl text-sm font-semibold leading-6 text-slate-100">
+        <p className="mt-4 max-w-2xl rounded-md bg-white/90 p-3 text-sm font-bold leading-6 text-slate-800 shadow-sm">
           The draw rewards the champion pick plus closest tournament totals. Admin updates actuals and prize details as the tournament progresses.
         </p>
       </section>

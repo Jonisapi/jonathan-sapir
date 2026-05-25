@@ -1,12 +1,55 @@
 'use client';
+import { FormEvent, useState } from 'react';
 import { useAppState } from '../components/AppState';
+
+const ADMIN_PASSCODE = '8888';
 
 export default function AdminPage() {
   const { predictions, admin, setAdmin } = useAppState();
+  const [passcode, setPasscode] = useState('');
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [error, setError] = useState('');
   const winnerGoals = [...predictions].sort((a, b) => Math.abs(a.totalGoals - admin.actualGoals) - Math.abs(b.totalGoals - admin.actualGoals) || a.submittedAt.localeCompare(b.submittedAt))[0];
   const winnerCards = [...predictions].sort((a, b) => Math.abs(a.totalCards - admin.actualCards) - Math.abs(b.totalCards - admin.actualCards) || a.submittedAt.localeCompare(b.submittedAt))[0];
   const claimedTeams = new Set(predictions.map((prediction) => prediction.winner));
   const availableCount = admin.teams.filter((team) => team.status === 'active' && !claimedTeams.has(team.name)).length;
+
+  const unlockAdmin = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (passcode === ADMIN_PASSCODE) {
+      setIsAuthorized(true);
+      setError('');
+      return;
+    }
+    setError('Incorrect passcode.');
+  };
+
+  if (!isAuthorized) {
+    return (
+      <main className="mx-auto max-w-md">
+        <section className="card">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-gold">Admin access</p>
+          <h1 className="mt-2 text-2xl font-bold">Enter passcode</h1>
+          <form className="mt-5 space-y-4" onSubmit={unlockAdmin}>
+            <label className="text-sm font-medium text-slate-700">
+              Passcode
+              <input
+                autoFocus
+                className="field mt-1.5"
+                inputMode="numeric"
+                type="password"
+                value={passcode}
+                onChange={(event) => setPasscode(event.target.value)}
+                placeholder="Enter admin passcode"
+              />
+            </label>
+            <button className="btn-primary w-full" type="submit">Unlock Admin</button>
+            {error && <p className="text-sm font-medium text-red-700">{error}</p>}
+          </form>
+        </section>
+      </main>
+    );
+  }
 
   return (
     <main className="space-y-5">

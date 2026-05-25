@@ -51,29 +51,6 @@ export default function HomePage() {
           </article>
         ))}
       </section>
-
-      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Link className="card group transition hover:-translate-y-0.5 hover:border-brand-teal hover:shadow-md" href="/predict">
-          <span className="text-sm font-semibold text-brand-teal">Entry</span>
-          <h3 className="mt-2 font-semibold">Submit Prediction</h3>
-          <p className="mt-2 text-sm text-slate-600">Add your winner, goals, and cards picks.</p>
-        </Link>
-        <Link className="card transition hover:-translate-y-0.5 hover:border-brand-teal hover:shadow-md" href="/leaderboard">
-          <span className="text-sm font-semibold text-brand-teal">Standings</span>
-          <h3 className="mt-2 font-semibold">View Leaderboard</h3>
-          <p className="mt-2 text-sm text-slate-600">See rankings across all prize categories.</p>
-        </Link>
-        <Link className="card transition hover:-translate-y-0.5 hover:border-brand-teal hover:shadow-md" href="/rules">
-          <span className="text-sm font-semibold text-brand-teal">Game</span>
-          <h3 className="mt-2 font-semibold">Rules & Prizes</h3>
-          <p className="mt-2 text-sm text-slate-600">Check scoring, tie-breaks, and prize examples.</p>
-        </Link>
-        <Link className="card transition hover:-translate-y-0.5 hover:border-brand-teal hover:shadow-md" href="/admin">
-          <span className="text-sm font-semibold text-brand-teal">Ops</span>
-          <h3 className="mt-2 font-semibold">Admin Controls</h3>
-          <p className="mt-2 text-sm text-slate-600">Lock entries and update actual totals.</p>
-        </Link>
-      </section>
     </main>
   );
 }

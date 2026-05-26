@@ -21,6 +21,7 @@ type SupabaseAdminRow = {
 };
 
 const ADMIN_ROW_ID = 'admin';
+const DEBUG_SUPABASE = process.env.DEBUG_SUPABASE === 'true';
 
 function getSupabaseConfig() {
   const rawUrl = process.env.SUPABASE_URL?.trim();
@@ -61,13 +62,15 @@ async function supabaseRequest<T>(path: string, init: RequestInit = {}): Promise
       },
       cache: 'no-store'
     });
-  } catch {
-    throw new Error(`Could not reach Supabase at ${url}. Check SUPABASE_URL in Vercel and confirm the Supabase project is active.`);
+  } catch (error) {
+    const cause = error instanceof Error ? error.message : String(error);
+    throw new Error(`Could not reach Supabase REST API at ${url}/rest/v1/${path}. Cause: ${cause}. Check SUPABASE_URL in Vercel and confirm the Supabase project is active.`);
   }
 
   if (!response.ok) {
     const detail = await response.text();
-    throw new Error(detail || `Supabase request failed with ${response.status}`);
+    const safeDetail = DEBUG_SUPABASE ? detail : detail.slice(0, 500);
+    throw new Error(safeDetail || `Supabase request failed with ${response.status}`);
   }
 
   if (response.status === 204) return undefined as T;

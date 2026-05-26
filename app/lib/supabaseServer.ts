@@ -45,7 +45,8 @@ function getSupabaseConfig() {
     throw new Error('SUPABASE_SERVICE_ROLE_KEY looks too short. Use the long service_role key from Supabase Project Settings > API.');
   }
 
-  return { url: parsedUrl.origin, key };
+  const normalizedUrl = `${parsedUrl.origin}${parsedUrl.pathname.replace(/\/rest\/v1\/?$/, '').replace(/\/$/, '')}`;
+  return { url: normalizedUrl, key };
 }
 
 async function supabaseRequest<T>(path: string, init: RequestInit = {}): Promise<T> {

@@ -17,13 +17,13 @@ export default function HomePage() {
         <div className="relative mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 rounded-full border border-brand-gold/25 bg-white/75 px-4 py-2 text-xs font-black uppercase tracking-[0.24em] text-brand-gold shadow-sm">
-              Bespoke office sweepstake
+              Wood N Beyond bespoke sweepstake
             </div>
             <h1 className="mt-5 text-5xl font-black leading-[0.98] text-slate-950 sm:text-6xl lg:text-7xl">
-              A sharper World Cup draw for the whole office.
+              A bespoke World Cup draw for the whole Wood N Beyond team.
             </h1>
             <p className="mt-6 max-w-xl text-lg font-medium leading-8 text-slate-700">
-              Submit one entry, follow live office standings, and compete for company-funded prizes across winner, goals, and booking-card categories.
+              Submit one entry, follow live office standings, and compete for company-funded prizes across winner, goals, and booking-card categories — all under the Wood N Beyond brand.
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
               <Link className="btn-primary" href="/predict">Submit Prediction</Link>

@@ -1,6 +1,12 @@
 import './globals.css';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { AppStateProvider } from './components/AppState';
+
+export const metadata: Metadata = {
+  title: 'WNB World Cup Office Draw',
+  description: 'Bespoke internal World Cup prediction app for office entries, standings, prizes, and admin controls.'
+};
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -21,6 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </Link>
                 <nav className="flex flex-wrap gap-6 text-sm font-medium text-slate-950 sm:text-base">
                   <Link className="nav-link" href="/">Home</Link>
+                  <Link className="nav-link" href="/predict">Predict</Link>
                   <Link className="nav-link" href="/leaderboard">Leaderboard</Link>
                   <Link className="nav-link" href="/rules">Rules & Prizes</Link>
                   <Link className="nav-link" href="/admin">Admin</Link>
@@ -30,6 +37,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <div className="mx-auto max-w-6xl px-4 py-6 sm:py-8">
               {children}
             </div>
+            <footer className="mx-auto max-w-6xl px-4 pb-8 text-xs font-medium text-slate-600">
+              <div className="rounded-lg border border-white/70 bg-white/60 p-4 shadow-sm backdrop-blur">
+                WNB internal competition · Free entry · Company-funded prizes
+              </div>
+            </footer>
           </div>
         </AppStateProvider>
       </body>
